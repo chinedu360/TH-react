@@ -27,7 +27,7 @@ export const getStudent = createAsyncThunk(
     } catch (error) {
       // console.log(error.response.data.error);
       return thunkAPI.rejectWithValue(
-        error.response.data.error || "getting Officer failed"
+        error.response.data.error || "getting student failed"
       );
     }
   }
@@ -45,7 +45,7 @@ export const getResource = createAsyncThunk(
     } catch (error) {
       // console.log(error.response.data.error);
       return thunkAPI.rejectWithValue(
-        error.response.data.error || "getting Officer failed"
+        error.response.data.error || "getting resources failed"
       );
     }
   }
@@ -63,7 +63,7 @@ export const addAssignment = createAsyncThunk(
     } catch (error) {
       console.log(error.response.data.msg, error);
       return thunkAPI.rejectWithValue(
-        error.response.data.msg || "Upload failed"
+        error.response.data.msg || "failed to add assignment"
       );
     }
   }
