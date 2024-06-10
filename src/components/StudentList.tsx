@@ -1,8 +1,24 @@
 import React from "react";
 import { PiStudentFill } from "react-icons/pi";
 
-// Define the List component
-const StudentList = ({ students, onStudentClick }) => {
+interface Student {
+  id: string;
+  firstname: string;
+  lastname: string;
+  grade: string;
+  email: string;
+  schoolId?: string;
+}
+
+interface StudentListProps {
+  students: Student[];
+  onStudentClick?: (student: Student) => void;
+}
+
+const StudentList: React.FC<StudentListProps> = ({
+  students,
+  onStudentClick,
+}) => {
   const renderStudents = () => {
     return students?.map((student) => (
       <li

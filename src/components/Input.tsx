@@ -1,6 +1,22 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 
-const Input = ({ type, placeholder, name, value, onChange, checked }) => {
+interface InputProps {
+  type: string;
+  placeholder?: string;
+  name: string;
+  value?: string | number;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  checked?: boolean;
+}
+
+const Input: React.FC<InputProps> = ({
+  type,
+  placeholder,
+  name,
+  value,
+  onChange,
+  checked,
+}) => {
   if (type === "checkbox") {
     return (
       <input
@@ -9,6 +25,7 @@ const Input = ({ type, placeholder, name, value, onChange, checked }) => {
         checked={checked}
         onChange={onChange}
         className="mr-2"
+        aria-label={name}
       />
     );
   }
@@ -21,6 +38,7 @@ const Input = ({ type, placeholder, name, value, onChange, checked }) => {
       value={value}
       onChange={onChange}
       className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+      aria-label={placeholder || name}
     />
   );
 };

@@ -1,7 +1,13 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Input from "./Input";
 
-const Modal = ({ isOpen, onClose, children }) => {
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   const modalStyle = `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-lg z-50 transition-opacity w-2/4 max-w-4xl ${
     isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
   }`;
@@ -17,7 +23,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 
         <button
           onClick={onClose}
-          className="block mt-4 px-4 py-2  text-black rounded border border-black "
+          className="block mt-4 px-4 py-2 text-black rounded border border-black"
         >
           Close
         </button>

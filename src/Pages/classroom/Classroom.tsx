@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import StudentList from "../../components/StudentList";
@@ -13,42 +13,47 @@ const Classroom = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { studentsData } = useSelector((store) => store.student);
+  const { studentsData, errorMessage, getStudentStatus } = useSelector(
+    (store) => store.student
+  );
   const [checkedAssignments, setCheckedAssignments] = useState({});
   const [assignments, setAssignments] = useState([]);
 
-  const back = () => {
+  const back = useCallback(() => {
     navigate(-1);
-  };
+  }, [navigate]);
 
-  const handleStudentClick = (student) => {
-    navigate(`/student/${student.id}`);
-    console.log("Clicked student:", student.id);
-  };
+  const handleStudentClick = useCallback(
+    (student) => {
+      navigate(`/student/${student.id}`);
+      // console.log("Clicked student:", student.id);
+    },
+    [navigate]
+  );
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const handleCheckboxChange = (e, homework) => {
+  const handleCheckboxChange = useCallback((e, homework) => {
     const { id } = homework;
     setCheckedAssignments((prev) => ({
       ...prev,
       [id]: e.target.checked,
     }));
-  };
+  }, []);
 
-  const handleSelectedAssignment = () => {
+  const handleSelectedAssignment = useCallback(() => {
     const selectedAssignments = homework.filter(
       (assignment) => checkedAssignments[assignment.id]
     );
     setAssignments(selectedAssignments);
     closeModal();
-  };
+  }, [checkedAssignments, closeModal]);
 
   useEffect(() => {
     dispatch(getStudent());
@@ -61,18 +66,29 @@ const Classroom = () => {
         <Button
           className="!bg-transparent !text-black border-none hover:bg-transparent py-0 px-0"
           onClick={back}
+          aria-label="Back"
         >
           <IoIosArrowRoundBack size={35} />
         </Button>
 
         <div className="mb-4 space-y-1">
-          <Button className="text-black" onClick={openModal}>
+          <Button
+            aria-label="Assign Homework"
+            className="text-black"
+            onClick={openModal}
+          >
             Assign Homework
           </Button>
-          <StudentList
-            students={studentsData?.students}
-            onStudentClick={handleStudentClick}
-          />
+          {getStudentStatus === "pending" ? (
+            <p>loading...</p>
+          ) : errorMessage ? (
+            <p className="text-red-500">{errorMessage}</p>
+          ) : (
+            <StudentList
+              students={studentsData?.students}
+              onStudentClick={handleStudentClick}
+            />
+          )}
         </div>
 
         <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -90,7 +106,9 @@ const Classroom = () => {
               <label className="ml-2">{assigned.subject}</label>
             </div>
           ))}
-          <Button onClick={handleSelectedAssignment}>Assign</Button>
+          <Button aria-label="Assign" onClick={handleSelectedAssignment}>
+            Assign
+          </Button>
         </Modal>
       </div>
       <h1 className="font-bold text-[30px]">Class Assigned Homework</h1>
